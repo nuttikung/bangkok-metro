@@ -1,0 +1,58 @@
+// import { DarkGreenStations, LightGreenStations, Station } from "./station";
+
+export type Line = {
+  code: string;
+  no: number;
+  name: {
+    th: string;
+    en: string;
+  };
+  color: string;
+  // stations: Station[];
+};
+
+export const Lines: Line[] = [
+  {
+    no: 1,
+    name: {
+      en: "Sukhumvit",
+      th: "สุขุมวิท",
+    },
+    color: "Light Green",
+    code: "light-green",
+    // stations: LightGreenStations,
+  },
+  {
+    no: 2,
+    name: {
+      en: "Silom",
+      th: "สีลม",
+    },
+    color: "Dark Green",
+    code: "dark-green",
+    // stations: DarkGreenStations,
+  },
+];
+
+// export const Lines: Line[] = [
+// 	{
+// 		no: 1,
+// 		name: {
+// 			en: "Sukhumvit",
+// 			th: "สุขุมวิท",
+// 		},
+// 		color: "Light Green",
+// 		code: "light-green",
+// 		stations: LightGreenStations,
+// 	},
+// 	{
+// 		no: 2,
+// 		name: {
+// 			en: "Silom",
+// 			th: "สีลม",
+// 		},
+// 		color: "Dark Green",
+// 		code: "dark-green",
+// 		stations: DarkGreenStations,
+// 	}
+// ];
