@@ -161,12 +161,10 @@ export const transformToSectionLine = (
   source: SectionLinegroup
 ): SectionLine => {
   const { lineGroup, ...rest } = source;
-  console.log("🚀 ~ file: Routing.ts:166 ~ lineGroup:", lineGroup);
   const scopeLines: number[] = lineGroup
     .split("-")
     .map((record) => lines.find((line) => line.name === record)?.id || -999)
     .filter((record) => record !== -999);
-  console.log("🚀 ~ file: Routing.ts:170 ~ scopeLines:", scopeLines);
   return {
     ...rest,
     lines: scopeLines,
