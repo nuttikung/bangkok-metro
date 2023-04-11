@@ -44,7 +44,7 @@ const findTotalDuration = (
   }
 };
 
-const StationCard: React.FunctionComponent<StationCardProps> = React.memo(
+const StationCard = React.memo(
   ({
     name,
     line,
@@ -53,7 +53,7 @@ const StationCard: React.FunctionComponent<StationCardProps> = React.memo(
     isFirst = false,
     duration,
     total,
-  }) => {
+  }: StationCardProps) => {
     const colorClass = Colors[line];
     let icon: JSX.Element;
     let connector: JSX.Element | null = null;
@@ -120,7 +120,7 @@ const StationCard: React.FunctionComponent<StationCardProps> = React.memo(
   }
 );
 
-const JourneyTimeline: React.FunctionComponent<Section> = ({ journey }) => {
+const JourneyTimeline = ({ journey }: Section) => {
   // calculate total duration per journey
   return (
     <React.Fragment>
