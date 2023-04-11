@@ -1,5 +1,6 @@
 import React from "react";
-import SubwayMap from "./components/SubwayMain";
+import SubwayMain from "./components/SubwayMain";
+import SubwayMap from "./components/SubwayMap";
 import DialogProvider from "./contexts/DialogContext";
 import SearchProvider from "./contexts/SearchContext";
 import StationProvider from "./contexts/StationContext";
@@ -12,6 +13,7 @@ const App: React.FunctionComponent = () => {
         <SearchProvider>
           <StationProvider>
             <SubwayMap />
+            <SubwayMain />
           </StationProvider>
         </SearchProvider>
       </DialogProvider>

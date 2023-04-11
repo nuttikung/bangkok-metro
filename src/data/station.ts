@@ -78,7 +78,7 @@ export const stations: Station[] = [
     code: "A7",
     name: { en: "Ratchaprarop", th: "ราชปรารภ" },
     lat: 13.755105328291402,
-    lng: 100.542152111355,
+    lng: 100.544152111355,
   },
   {
     id: 9,
@@ -87,7 +87,7 @@ export const stations: Station[] = [
     code: "A8",
     name: { en: "Phaya Thai", th: "พญาไท" },
     lat: 13.756778528931465,
-    lng: 100.53483912082491,
+    lng: 100.53683912082491,
   },
   {
     id: 11,
@@ -204,7 +204,7 @@ export const stations: Station[] = [
     code: "BL13",
     name: { en: "Chatuchak Park", th: "สวนจตุจักร" },
     lat: 13.8021317525924,
-    lng: 100.55304756760927,
+    lng: 100.55094756760927,
   },
   {
     id: 24,
@@ -213,7 +213,7 @@ export const stations: Station[] = [
     code: "BL14",
     name: { en: "Phahon Yothin", th: "พหลโยธิน " },
     lat: 13.814348693085432,
-    lng: 100.56014480273932,
+    lng: 100.55814480273932,
   },
   {
     id: 25,
@@ -287,7 +287,7 @@ export const stations: Station[] = [
     status: STATUS.OPEN,
     code: "BL22",
     name: { en: "Sukhumvit", th: "สุขุมวิท" },
-    lat: 13.738550338194717,
+    lat: 13.740550338194717,
     lng: 100.56145567532236,
   },
   {
@@ -443,7 +443,7 @@ export const stations: Station[] = [
     status: STATUS.OPEN,
     code: "CEN",
     name: { en: "Siam", th: "สยาม" },
-    lat: 13.745611433340166,
+    lat: 13.743611433340166,
     lng: 100.53414740687204,
   },
   {
@@ -668,7 +668,7 @@ export const stations: Station[] = [
     status: STATUS.OPEN,
     code: "G1",
     name: { en: "Krung Thon Buri", th: "กรุงธนบุรี" },
-    lat: 13.72111861763501,
+    lat: 13.72311861763501,
     lng: 100.50364836402458,
   },
   {
@@ -1043,7 +1043,7 @@ export const stations: Station[] = [
     status: STATUS.OPEN,
     code: "PP16",
     name: { en: "Tao Poon", th: "เตาปูน" },
-    lat: 13.806212593318548,
+    lat: 13.810212593318548,
     lng: 100.5307589797373,
   },
   {
@@ -1142,8 +1142,8 @@ export const stations: Station[] = [
     status: STATUS.OPEN,
     code: "RW01",
     name: { en: "Bang Sue", th: "บางซื่อ" },
-    lat: 13.804643888810439,
-    lng: 100.5420537080199,
+    lat: 13.806643888810439,
+    lng: 100.5380537080199,
   },
   {
     id: 312,
@@ -1152,7 +1152,7 @@ export const stations: Station[] = [
     code: "RW02",
     name: { en: "Bang Son", th: "บางซ่อน" },
     lat: 13.822058921662803,
-    lng: 100.53418900198413,
+    lng: 100.53818900198413,
   },
   {
     id: 315,
@@ -1205,7 +1205,7 @@ export const stations: Station[] = [
     status: STATUS.OPEN,
     code: "S12",
     name: { en: "Bang Wa", th: "บางหว้า" },
-    lat: 13.720529478019245,
+    lat: 13.716529478019245,
     lng: 100.45779097072646,
   },
   {

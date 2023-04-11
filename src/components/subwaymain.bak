@@ -29,8 +29,6 @@ const options: StationOption[] = stations.map((station) => ({
 
 const SubwayMain: FunctionComponent = () => {
   const { search, setSearch } = useContext(SearchContext);
-  console.log("🚀 ~ file: App.tsx:32 ~ search:", search);
-
   const [selectedOptionFrom, setSelectedOptionFrom] =
     useState<StationOption | null>(null);
   const [selectedOptionTo, setSelectedOptionTo] =
@@ -39,7 +37,6 @@ const SubwayMain: FunctionComponent = () => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
   const [possibleRoutes, setPossibleRoutes] = useState<Section[] | []>([]);
-  console.log("🚀 ~ file: App.tsx:130 ~ possibleRoutes:", possibleRoutes);
 
   const [activeRoute, setActiveRoute] = useState<number>(0);
 
@@ -94,7 +91,6 @@ const SubwayMain: FunctionComponent = () => {
           })
           .sort((current, next) => current.duration - next.duration);
         setPossibleRoutes(section);
-        // console.log("🚀 ~ file: App.tsx:188 ~ finsAllPath ~ section:", section);
         if (section.length > 0) {
           setActiveRoute(1);
         }
@@ -139,7 +135,6 @@ const SubwayMain: FunctionComponent = () => {
 
   const handlers = useSwipeable({
     onSwiped: handleSwiped,
-    onTap: (evnt) => console.log(evnt),
     onTouchStartOrOnMouseDown: ({ event }) => event.preventDefault(),
     touchEventOptions: { passive: false },
     preventScrollOnSwipe: true,
@@ -151,7 +146,6 @@ const SubwayMain: FunctionComponent = () => {
   //   (name: string, status: Status) => (event: Event) => {
   //     event.preventDefault();
   //     if (status !== Status.CLOSE && status !== Status.CONSTRUCTION) {
-  //       console.log("🚀 ~ file: App.tsx:9 ~ handleClick ~ name:", name);
   //     }
   //   };
 
@@ -244,7 +238,6 @@ const SubwayMain: FunctionComponent = () => {
   //     height={500}
   //     detectAutoPan={false}
   //     className="mx-auto my-0 mt-4"
-  //     // onClick={event => console.log('click', event.x, event.y, event.originalEvent)}
   //   >
   //     <svg height={1200} width={1200} className="my-0 mx-auto">
   //       {subwayLines.map((line) => {

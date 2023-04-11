@@ -19,7 +19,6 @@ const SubwayMap: FunctionComponent = () => {
   //   (name: string, status: Status) => (event: Event) => {
   //     event.preventDefault();
   //     if (status !== Status.CLOSE && status !== Status.CONSTRUCTION) {
-  //       console.log("🚀 ~ file: App.tsx:9 ~ handleClick ~ name:", name);
   //     }
   //   };
 
@@ -36,7 +35,6 @@ const SubwayMap: FunctionComponent = () => {
       height={500}
       detectAutoPan={false}
       className="mx-auto my-0 mt-4"
-      // onClick={event => console.log('click', event.x, event.y, event.originalEvent)}
     >
       <svg height={1200} width={1200} className="my-0 mx-auto">
         {Lines.map((line) => (

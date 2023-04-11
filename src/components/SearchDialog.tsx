@@ -65,8 +65,6 @@ const SearchDialog = React.memo(() => {
   const handleTextfieldChange = (
     event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => {
-    // console.log(event.target)
-
     if (dialogFrom) {
       setSearch({ ...search, from: event.target.value });
     } else {

@@ -130,7 +130,7 @@ export const getLineGroup = (
 ): SectionLinegroup => {
   const lineGrop = source.journey
     .map((record) => record.stations.map((rc) => rc.line))
-    .reduce((prev, next) => prev.concat(next))
+    .reduce((prev, next) => prev.concat(next), [])
     .reduce(
       (unique: string[], item: string) =>
         unique.includes(item) ? unique : [...unique, item],

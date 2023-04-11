@@ -11,7 +11,6 @@ import LanguageProvider, {
 
 const LanguageSwitcher: React.FunctionComponent = () => {
   const { language, setLanguage } = useContext(LanguageContext);
-  console.log("🚀 ~ file: LanguageSwitcher.tsx:14 ~ language:", language);
   const handleClickLanguage = (lang: Language) => () => {
     setLanguage(lang);
   };

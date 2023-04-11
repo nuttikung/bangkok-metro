@@ -3,6 +3,7 @@ import {
   ReactNode,
   SetStateAction,
   createContext,
+  useContext,
   useEffect,
   useState,
 } from "react";
@@ -108,6 +109,15 @@ export const StationProvider = ({ children }: StationProviderProps) => {
       {children}
     </StationContext.Provider>
   );
+};
+
+export const useStationContext = () => {
+  const context = useContext(StationContext);
+  if (!context)
+    throw new Error(
+      "StationContext must be called from within the StationContextProvider"
+    );
+  return context;
 };
 
 export default StationProvider;

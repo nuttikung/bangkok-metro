@@ -3,6 +3,7 @@ import {
   ReactNode,
   SetStateAction,
   createContext,
+  useContext,
   useState,
 } from "react";
 
@@ -41,6 +42,15 @@ export const DialogProvider = ({ children }: DialogProviderProps) => {
       {children}
     </DialogContext.Provider>
   );
+};
+
+export const useDialogContext = () => {
+  const context = useContext(DialogContext);
+  if (!context)
+    throw new Error(
+      "DialogContext must be called from within the DialogContextProvider"
+    );
+  return context;
 };
 
 export default DialogProvider;
