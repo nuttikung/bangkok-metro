@@ -25,7 +25,7 @@ Install bangkok-metro with pnpm
 
 ## Tech Stack
 
-**Client:** React, Material-UI, TailwindCSS, Typescript
+**Client:** React, Material-UI, TailwindCSS, Typescript, CytoscapeJS
 
 ## Roadmap
 
@@ -37,12 +37,14 @@ Install bangkok-metro with pnpm
 
 ## Todo
 
-[ ] Station search need improve on FP programming
+[ ] Station search need improve on FP programming (Optimization)
 
 [ ] Memoization with client DB [Dexie.js](https://dexie.org)
 
-[ ] Draw SVG from Lat,Lng (can interactive with dot as a station, edge as a line)
+[x] Draw SVG from Lat,Lng (can interactive with dot as a station, edge as a line)
 
 [ ] i18n (English/Thai/Chinese)
 
 [ ] Change theme of project
+
+[ ] Making Desktop UI (Separate with mobile)
