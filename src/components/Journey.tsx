@@ -68,7 +68,7 @@ const StationCard = React.memo(
     // COMMENT: First or Transfer will show LINE name
     if (isTransfer || isFirst) {
       lineAbbr = (
-        <Typography variant="subtitle2" className="font-semi-bold">
+        <Typography variant="subtitle2" className="font-semi-bold text-white">
           {line}
         </Typography>
       );
@@ -83,13 +83,13 @@ const StationCard = React.memo(
     // COMMENT: Transfer will show as Transfer (x) minutes
     if (isFirst && isTransfer) {
       description = (
-        <Typography variant="subtitle1" className={"font-bold text-gray-600"}>
+        <Typography variant="subtitle1" className={"text-white"}>
           Transfer {duration / 60} minutes
         </Typography>
       );
     } else if (isFirst) {
       description = (
-        <Typography variant="subtitle1" className={"font-bold text-gray-600"}>
+        <Typography variant="subtitle1" className={"text-white"}>
           {total} station(s) {duration / 60} minutes
         </Typography>
       );
@@ -104,11 +104,11 @@ const StationCard = React.memo(
           {connector}
         </TimelineSeparator>
         <TimelineContent>
-          <Paper className="station-card" elevation={0}>
-            <Typography variant="body1" className="font-bold mt-3">
+          <Paper className="station-card bg-gray-600" elevation={0}>
+            <Typography variant="body1" className="mt-3 text-white">
               {name.en}
             </Typography>
-            <Typography variant="body1" className="">
+            <Typography variant="body1" className="text-white">
               {name.th}
             </Typography>
             {lineAbbr}

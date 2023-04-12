@@ -45,10 +45,10 @@ const SearchDialog = React.memo(() => {
   let searchValue: string;
   let title: string;
   if (dialogFrom) {
-    title = "สถานีต้นทาง";
+    title = "From";
     searchValue = search.from;
   } else {
-    title = "สถานีปลายทาง";
+    title = "To";
     searchValue = search.to;
   }
 
@@ -111,7 +111,7 @@ const SearchDialog = React.memo(() => {
       onClose={handleCloseDialog}
       TransitionComponent={Transition}
     >
-      <AppBar position="sticky" className="bg-primary">
+      <AppBar position="sticky" elevation={0} className="bg-gray-600">
         <Toolbar>
           <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
             {title}
@@ -125,47 +125,52 @@ const SearchDialog = React.memo(() => {
             <CloseIcon />
           </IconButton>
         </Toolbar>
-      </AppBar>
-      <Grid
-        container
-        spacing={0}
-        direction="row"
-        justifyContent="center"
-        alignItems="center"
-        className="mt-3"
-        component="form"
-        noValidate
-        onSubmit={handleFormSubmit}
-      >
-        <Grid item xs={12} className="px-2 py-1">
-          <TextField
-            fullWidth
-            label={title}
-            placeholder="พิมพ์เพื่อค้นหา"
-            value={searchValue}
-            onChange={handleTextfieldChange}
-            onKeyDown={handleKeyPress}
-            type="text"
-            autoComplete="off"
-            inputRef={searchTextField}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon />
-                </InputAdornment>
-              ),
-              endAdornment: searchValue !== "" && (
-                <InputAdornment position="start">
-                  <IconButton onClick={handleClearTextfield}>
-                    <CloseIcon />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
+        <Grid
+          container
+          spacing={0}
+          direction="row"
+          justifyContent="center"
+          alignItems="center"
+          className="pt-4 bg-white"
+          component="form"
+          noValidate
+          onSubmit={handleFormSubmit}
+        >
+          <Grid item xs={12} className="px-2 py-1">
+            <TextField
+              fullWidth
+              label={title}
+              className="border-white"
+              placeholder="Keyword to search"
+              value={searchValue}
+              onChange={handleTextfieldChange}
+              onKeyDown={handleKeyPress}
+              type="text"
+              autoComplete="off"
+              inputRef={searchTextField}
+              classes={{
+                root: "border-white",
+              }}
+              InputProps={{
+                className: "text-gray-600",
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+                endAdornment: searchValue !== "" && (
+                  <InputAdornment position="start">
+                    <IconButton onClick={handleClearTextfield}>
+                      <CloseIcon />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Grid>
         </Grid>
-      </Grid>
-      <List className="mt-0 pt-0">
+      </AppBar>
+      <List component="div" className="mt-0 pt-0">
         {result.map((station, index) => {
           const colorClass = Colors[station.line];
           return (

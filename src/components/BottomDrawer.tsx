@@ -1,86 +1,46 @@
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import DirectionsWalkIcon from "@mui/icons-material/DirectionsWalk";
-import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
-import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
-import Timeline from "@mui/lab/Timeline";
-import { timelineItemClasses } from "@mui/lab/TimelineItem";
-import Button from "@mui/material/Button";
-import Divider from "@mui/material/Divider";
-import Drawer from "@mui/material/Drawer";
+import CloseIcon from "@mui/icons-material/Close";
+import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
+import TimelineDot from "@mui/lab/TimelineDot";
 import Grid from "@mui/material/Grid";
+import IconButton from "@mui/material/IconButton";
 import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import MobileStepper from "@mui/material/MobileStepper";
-import Stack from "@mui/material/Stack";
+import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import Typography from "@mui/material/Typography";
-import { format } from "date-fns";
-import addSeconds from "date-fns/addSeconds";
-import prettyMilliseconds from "pretty-ms";
 import React, { useContext, useMemo } from "react";
 import { DialogContext } from "../contexts/DialogContext";
-import { StationContext } from "../contexts/StationContext";
+import { useStationContext } from "../contexts/StationContext";
 import { useUiContext } from "../contexts/UiContext";
-import { JourneyType } from "../data/journey";
-import { subwayLines } from "../data/line";
 import { Colors } from "../utils/Color";
-import JourneyTimeline from "./Journey";
 
 const BottomDrawer: React.FunctionComponent = () => {
   const { dialog, setDialog } = useContext(DialogContext);
-  const { point, routes, activeRoute, setActiveRoute, setPoint, searchDate } =
-    useContext(StationContext);
-  const { isShow, setIsShow, isSwipeDrawer } = useUiContext();
-  const currentRoute = routes[activeRoute];
-  const travelTime = prettyMilliseconds((currentRoute?.duration || 0) * 1000);
-  const startTime = useMemo(() => format(searchDate, "HH:mm"), [searchDate]);
-  const endTime = useMemo(
-    () => format(addSeconds(searchDate, currentRoute?.duration || 0), "HH:mm"),
-    [searchDate, currentRoute?.duration]
-  );
-  const transferAmount: number =
-    currentRoute?.journey.filter((value) => value.type === JourneyType.TRANSFER)
-      .length || 0;
+  const { point, setPoint, isPreviewRoute } = useStationContext();
+  const { isShowMainDrawer, isShowRouteDetail } = useUiContext();
+  // COMMENT: iOS
+  const iOS =
+    typeof navigator !== "undefined" &&
+    /iPad|iPhone|iPod/.test(navigator.userAgent);
 
-  // Drawer open temporary
-  let routePreview: JSX.Element | JSX.Element[] | null = null;
-  let timePreview: JSX.Element | null = null;
-  let trasnferText =
-    transferAmount > 1
-      ? `${transferAmount} transfers`
-      : `${transferAmount} transfer`;
-
-  if (currentRoute !== undefined) {
-    if (currentRoute.lines.length === 0) {
-      routePreview = <DirectionsWalkIcon />;
-    } else {
-      routePreview = currentRoute.lines.map((line, index, self) => {
-        const lineName = subwayLines.find((record) => record.id === line);
-        const dotClass =
-          "flex w-6 h-6 rounded-full mr-1.5 flex-shrink-0 " +
-          Colors[lineName?.name || ""];
-        return (
-          <React.Fragment key={index}>
-            <span className="flex items-center text-sm font-medium dark:text-white">
-              <span className={dotClass} />
-            </span>
-            {index !== self.length - 1 && (
-              <ArrowForwardIcon className="text-gray-900 mr-2" />
-            )}
-          </React.Fragment>
-        );
-      });
+  // Start dot
+  const startDot = useMemo(() => {
+    if (point.from !== undefined) {
+      const colorClass = Colors[point.from.line];
+      return <TimelineDot className={colorClass} />;
     }
-    timePreview = (
-      <React.Fragment>
-        <Typography variant="caption" className="text-gray-600 font-semibold">
-          {startTime} - {endTime} ({travelTime}), {trasnferText}
-        </Typography>
-      </React.Fragment>
-    );
-  } else {
-    routePreview = null;
-  }
+    return <TimelineDot />;
+  }, [point?.from?.line]);
+  // End dot
+  const endDot = useMemo(() => {
+    if (point.to !== undefined) {
+      const colorClass = Colors[point.to.line];
+      return <TimelineDot className={colorClass} />;
+    }
+    return <TimelineDot />;
+  }, [point?.to?.line]);
 
   const handleSearchFromClick = (type: string) => () => {
     if (type === "FROM") {
@@ -98,261 +58,166 @@ const BottomDrawer: React.FunctionComponent = () => {
     event.preventDefault();
   };
 
-  const handleNextCLick = () => {
-    setActiveRoute(activeRoute + 1);
+  const handleOpenMainDrawer = (
+    event: React.SyntheticEvent<{}, Event>
+  ): void => {
+    throw new Error("Function not implemented.");
   };
 
-  const handlePrevClick = () => {
-    setActiveRoute(activeRoute - 1);
-  };
-
-  const handleClearStation = (
+  const clearStartPoint = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    setPoint({ from: undefined, to: undefined });
+  ): void => {
+    setPoint({ ...point, from: undefined });
   };
 
-  const handleRouteDetailClick = () => {
-    setIsShow(true);
-  };
-
-  const handleCloseRouteClick = (
+  const clearEndPoint = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    setIsShow(false);
+  ): void => {
+    setPoint({ ...point, to: undefined });
+  };
+
+  const swapStartToEnd = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ): void => {
+    setPoint({ ...point, from: point.to, to: point.from });
+  };
+
+  const handleCloseMainDrawer = (
+    event: {},
+    reason: "backdropClick" | "escapeKeyDown"
+  ): void => {
+    throw new Error("Function not implemented.");
   };
 
   return (
     <React.Fragment>
-      <Drawer
+      <SwipeableDrawer
         PaperProps={{
-          className: !isShow
-            ? "py-2 rounded-t-xl bg-white transition-transform ease-in-out duration-300"
-            : "h-[90%] md:h-[70%] rounded-t-xl bg-white transition-transform ease-in-out duration-300",
+          className: "py-2 rounded-t-xl bg-gray-500",
+          elevation: 0,
         }}
-        ModalProps={{
-          keepMounted: true,
-        }}
+        ModalProps={{ keepMounted: true }}
+        onOpen={handleOpenMainDrawer}
         hideBackdrop
         anchor="bottom"
-        open={!isSwipeDrawer}
+        open={isShowMainDrawer && !isPreviewRoute && !isShowRouteDetail}
         variant="persistent"
-        className="transition-transform ease-in-out duration-300"
+        disableBackdropTransition={!iOS}
+        disableDiscovery={iOS}
         onClose={() => {}}
+        // onClose={handleCloseMainDrawer}
       >
-        {isShow && (
-          <React.Fragment>
-            <div className="sticky top-0 bg-white z-50">
-              <Stack
-                direction="row"
-                justifyContent="space-between"
-                alignItems="center"
-                className="p-2"
-              >
-                <Typography
-                  variant="button"
-                  className="text-gray-600 font-semibold normal-case"
-                >
-                  {currentRoute.duration / 60} minutes
-                </Typography>
-                <Button
-                  variant="text"
-                  disableRipple
-                  className="text-primary normal-case"
-                  onClick={handleCloseRouteClick}
-                >
-                  Close
-                </Button>
-              </Stack>
-              <Divider />
-            </div>
-            <Timeline
-              sx={{
-                [`& .${timelineItemClasses.root}:before`]: {
-                  flex: 0,
-                  padding: 0,
-                },
-              }}
-              className="mt-0"
-            >
-              <JourneyTimeline {...currentRoute} />
-            </Timeline>
-          </React.Fragment>
-        )}
-        {routes.length > 0 && !isShow && (
-          <React.Fragment>
-            <MobileStepper
-              variant="dots"
-              steps={routes.length}
-              position="static"
-              activeStep={activeRoute}
-              className="flex-1"
-              classes={{ dotActive: "bg-primary" }}
-              nextButton={
-                <Button
-                  size="small"
-                  className="text-primary"
-                  disableRipple
-                  onClick={handleNextCLick}
-                  disabled={activeRoute === routes.length - 1}
-                >
-                  <KeyboardArrowRight />
-                </Button>
-              }
-              backButton={
-                <Button
-                  size="small"
-                  className="text-primary"
-                  disableRipple
-                  onClick={handlePrevClick}
-                  disabled={activeRoute === 0}
-                >
-                  <KeyboardArrowLeft />
-                </Button>
-              }
-            />
-          </React.Fragment>
-        )}
-        {!isShow && (
-          <React.Fragment>
-            {currentRoute !== undefined && (
-              <Grid
-                container
-                spacing={0}
-                className="p-2"
-                direction="row"
-                justifyContent="space-between"
-                alignItems="center"
-              >
-                <Grid
-                  item
-                  xs={12}
-                  className="flex items-center flex-wrap gap-1"
-                >
-                  {routePreview}
-                </Grid>
-              </Grid>
-            )}
-            <Grid
-              container
-              spacing={0}
-              className="p-2"
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Grid item xs={12} className="flex items-center flex-wrap">
-                {timePreview}
-              </Grid>
-            </Grid>
-            {currentRoute !== undefined && !isShow && (
-              <React.Fragment>
-                <Grid
-                  container
-                  spacing={0}
-                  direction="row"
-                  justifyContent="space-between"
-                  alignItems="center"
-                >
-                  <Grid item className="mx-2">
-                    <Typography
-                      component={Button}
-                      variant="caption"
-                      display="block"
-                      className="text-primary font-semibold"
-                      onClick={handleRouteDetailClick}
+        <Grid
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          spacing={0}
+          columns={16}
+          component="form"
+          container
+          className="px-2"
+          onSubmit={handleFormSubmit}
+        >
+          <Grid item xs={7}>
+            <List component="div" role="group" className="w-full">
+              <ListItem
+                disablePadding
+                secondaryAction={
+                  point?.from?.id !== undefined && (
+                    <IconButton
+                      disableRipple
+                      edge="end"
+                      aria-label="clear-search-from"
+                      onClick={clearStartPoint}
                     >
-                      Route details
-                    </Typography>
-                  </Grid>
-                  <Grid item className="mx-2">
-                    <Typography
-                      component={Button}
-                      variant="caption"
-                      display="block"
-                      className="text-gray-600 font-semibold"
-                      onClick={handleClearStation}
-                    >
-                      Clear
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </React.Fragment>
-            )}
-            <Grid
-              container
-              spacing={0}
-              component="form"
-              noValidate
-              onSubmit={handleFormSubmit}
-              className="mt-1"
+                      <CloseIcon className="text-gray-400" />
+                    </IconButton>
+                  )
+                }
+              >
+                <ListItemButton
+                  aria-haspopup="true"
+                  aria-controls="search-from-menu"
+                  aria-label="search-from"
+                  className="rounded-md bg-gray-600 px-2 text-transparent hover:bg-gray-600"
+                  onClick={handleSearchFromClick("FROM")}
+                  disableRipple
+                >
+                  <ListItemIcon className="min-w-[20px]">
+                    {startDot}
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={
+                      <Typography
+                        variant="subtitle2"
+                        noWrap
+                        className="text-gray-300"
+                      >
+                        {point.from?.id === undefined
+                          ? "From"
+                          : point.from.name.en}
+                      </Typography>
+                    }
+                  />
+                </ListItemButton>
+              </ListItem>
+            </List>
+          </Grid>
+          <Grid item>
+            <IconButton
+              size="small"
+              disableRipple
+              onClick={swapStartToEnd}
+              disabled={
+                point.to?.id === undefined && point.from?.id === undefined
+              }
             >
-              <Grid item xs={6} className="px-2">
-                <List component="div" role="group">
-                  <ListItemButton
-                    divider
-                    aria-haspopup="true"
-                    aria-controls="search-from-menu"
-                    aria-label="search-from"
-                    className="rounded-md border-[1px] border-solid border-gray-300 px-2"
-                    onClick={handleSearchFromClick("FROM")}
-                  >
-                    <ListItemText
-                      primary="สถานีต้นทาง"
-                      secondary={
-                        point.from?.id === undefined ? (
-                          <Typography
-                            variant="subtitle2"
-                            noWrap
-                            className="text-gray-500"
-                          >
-                            เลือกที่นี่
-                          </Typography>
-                        ) : (
-                          <Typography variant="subtitle2" noWrap>
-                            {point.from.name.en}
-                          </Typography>
-                        )
-                      }
-                    />
-                  </ListItemButton>
-                </List>
-              </Grid>
-              <Grid item xs={6} className="px-2">
-                <List component="div" role="group">
-                  <ListItemButton
-                    divider
-                    aria-haspopup="true"
-                    aria-controls="search-to-menu"
-                    aria-label="search-to"
-                    className="rounded-md border-[1px] border-solid border-gray-300 px-2"
-                    onClick={handleSearchFromClick("TO")}
-                  >
-                    <ListItemText
-                      primary="สถานีปลายทาง"
-                      secondary={
-                        point.to?.id === undefined ? (
-                          <Typography
-                            variant="subtitle2"
-                            noWrap
-                            className="text-gray-500"
-                          >
-                            เลือกที่นี่
-                          </Typography>
-                        ) : (
-                          <Typography variant="subtitle2" noWrap>
-                            {point.to.name.en}
-                          </Typography>
-                        )
-                      }
-                    />
-                  </ListItemButton>
-                </List>
-              </Grid>
-            </Grid>
-          </React.Fragment>
-        )}
-      </Drawer>
+              <SwapHorizIcon fontSize="inherit" />
+            </IconButton>
+          </Grid>
+          <Grid item xs={7}>
+            <List component="div" role="group" className="w-full">
+              <ListItem
+                disablePadding
+                secondaryAction={
+                  point?.to?.id !== undefined && (
+                    <IconButton
+                      disableRipple
+                      edge="end"
+                      aria-label="clear-search-from"
+                      onClick={clearEndPoint}
+                    >
+                      <CloseIcon className="text-gray-400" />
+                    </IconButton>
+                  )
+                }
+              >
+                <ListItemButton
+                  aria-haspopup="true"
+                  aria-controls="search-to-menu"
+                  aria-label="search-to"
+                  className="rounded-md bg-gray-600 px-2 text-transparent hover:bg-gray-600"
+                  disableRipple
+                  onClick={handleSearchFromClick("TO")}
+                >
+                  <ListItemIcon className="min-w-[20px]">{endDot}</ListItemIcon>
+                  <ListItemText
+                    primary={
+                      <Typography
+                        variant="subtitle2"
+                        noWrap
+                        className="text-gray-300"
+                      >
+                        {point.to?.id === undefined ? "To" : point.to.name.en}
+                      </Typography>
+                    }
+                  />
+                </ListItemButton>
+              </ListItem>
+            </List>
+          </Grid>
+        </Grid>
+      </SwipeableDrawer>
     </React.Fragment>
   );
 };

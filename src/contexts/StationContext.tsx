@@ -30,9 +30,11 @@ export interface StationInterface {
   setPoint: Dispatch<SetStateAction<StationPick>>;
   routes: SectionLine[];
   activeRoute: number;
+  isPreviewRoute: boolean;
   setActiveRoute: Dispatch<SetStateAction<number>>;
   searchDate: Date;
   setSearchDate: Dispatch<SetStateAction<Date>>;
+  setIsPreviewRoute: Dispatch<SetStateAction<boolean>>;
 }
 
 const defaultValue = {
@@ -58,6 +60,7 @@ export const StationProvider = ({ children }: StationProviderProps) => {
   const [routes, setRoutes] = useState<SectionLine[]>([]);
   const [activeRoute, setActiveRoute] = useState<number>(0);
   const [searchDate, setSearchDate] = useState<Date>(new Date());
+  const [isPreviewRoute, setIsPreviewRoute] = useState<boolean>(false);
   // COMMENT: Initialize Graph
   useEffect(() => {
     Graph.initialize();
@@ -84,10 +87,12 @@ export const StationProvider = ({ children }: StationProviderProps) => {
         // after search set route 0 to show as first
         if (routes.length > 0) {
           setActiveRoute(0);
+          setIsPreviewRoute(true);
         }
       } else {
         setRoutes([]);
         setActiveRoute(0);
+        setIsPreviewRoute(false);
       }
     };
 
@@ -104,6 +109,8 @@ export const StationProvider = ({ children }: StationProviderProps) => {
         setActiveRoute,
         searchDate,
         setSearchDate,
+        isPreviewRoute,
+        setIsPreviewRoute,
       }}
     >
       {children}

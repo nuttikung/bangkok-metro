@@ -1,5 +1,5 @@
 import { Journey, JourneyType, Station, subwayLines as lines } from "../data";
-import { routes } from "../data/route";
+import { Route, routes } from "../data/route";
 import { Section, SectionLine, SectionLinegroup } from "../data/section";
 import { stations } from "../data/station";
 
@@ -44,6 +44,7 @@ export const useLess = (routeGroup: number[]) => {
 
 export const getStationGroup = (routeGroup: number[] = []): Section => {
   const pathStations: Station[] = [];
+  const edges: Route[] = [];
   let duration: number = 0;
   routeGroup.forEach((element, index, self) => {
     const stationGroup = stations.find((record) => record.id === element);
@@ -61,9 +62,11 @@ export const getStationGroup = (routeGroup: number[] = []): Section => {
           record.id_from === routeGroup[index + 1] && record.id_to === element
       );
       if (non_reverse !== undefined) {
+        edges.push(non_reverse);
         duration += non_reverse.delay;
       }
       if (reverse !== undefined) {
+        edges.push(reverse);
         duration += reverse.delay;
       }
     }
@@ -71,6 +74,8 @@ export const getStationGroup = (routeGroup: number[] = []): Section => {
 
   return {
     journey: getJourney(pathStations),
+    stations: routeGroup,
+    edges: edges,
     duration: duration,
   };
 };

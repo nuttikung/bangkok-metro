@@ -13,20 +13,24 @@ export type Ui = {
 };
 
 type Context = {
-  isShow: boolean;
-  isSwipeDrawer: boolean;
+  isShowMainDrawer: boolean;
+  isShowRouteDetail: boolean;
+  isShowPickNode: boolean;
+  setIsShowMainDrawer: Dispatch<SetStateAction<boolean>>;
+  setIsShowRouteDetail: Dispatch<SetStateAction<boolean>>;
+  setIsShowPickNode: Dispatch<SetStateAction<boolean>>;
   nodeId: string;
-  setIsShow: Dispatch<SetStateAction<boolean>>;
-  setIsSwipeDrawer: Dispatch<SetStateAction<boolean>>;
   setNodeId: Dispatch<SetStateAction<string>>;
 };
 
 const defaultValue = {
-  isShow: false,
-  isSwipeDrawer: false,
+  isShowPickNode: false,
+  isShowMainDrawer: false,
+  isShowRouteDetail: false,
   nodeId: "",
-  setIsShow: (isShow: boolean) => {},
-  setIsSwipeDrawer: (isSwipeDrawer: boolean) => {},
+  setIsShowMainDrawer: (show: boolean) => {},
+  setIsShowRouteDetail: (show: boolean) => {},
+  setIsShowPickNode: (show: boolean) => {},
   setNodeId: (id: string) => {},
 } as Context;
 
@@ -37,16 +41,19 @@ type Props = {
 };
 
 export const UiProvider = ({ children }: Props) => {
-  const [isShow, setIsShow] = useState<boolean>(false);
-  const [isSwipeDrawer, setIsSwipeDrawer] = useState<boolean>(false);
+  const [isShowMainDrawer, setIsShowMainDrawer] = useState<boolean>(true);
+  const [isShowPickNode, setIsShowPickNode] = useState<boolean>(false);
   const [nodeId, setNodeId] = useState<string>("");
+  const [isShowRouteDetail, setIsShowRouteDetail] = useState<boolean>(false);
   return (
     <UiContext.Provider
       value={{
-        isShow,
-        setIsShow,
-        isSwipeDrawer,
-        setIsSwipeDrawer,
+        isShowMainDrawer,
+        setIsShowMainDrawer,
+        isShowRouteDetail,
+        setIsShowRouteDetail,
+        isShowPickNode,
+        setIsShowPickNode,
         nodeId,
         setNodeId,
       }}

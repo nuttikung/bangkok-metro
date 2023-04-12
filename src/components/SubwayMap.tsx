@@ -7,13 +7,14 @@ import Stack from "@mui/material/Stack";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import Typography from "@mui/material/Typography";
 import { Core, ElementDefinition } from "cytoscape";
-import React from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 import { useStationContext } from "../contexts/StationContext";
 import { useUiContext } from "../contexts/UiContext";
 import { subwayLines as lines } from "../data/line";
-import { Route, RouteType, routes } from "../data/route";
+import { Route, RouteType, routes as subwayRoutes } from "../data/route";
 import { Station, stations } from "../data/station";
+import RoutePreviewDrawer from "./RoutePreviewDrawer";
 
 const findNodeStation = (id: string): Station | undefined => {
   if (id !== "") {
@@ -29,9 +30,11 @@ const findNodeStation = (id: string): Station | undefined => {
 
 // TODO: Implement Hight light Nodes and Edge base on active/current routes (main concept is opacity)
 const SubwayMap = () => {
-  const { point, setPoint } = useStationContext();
-  const { isSwipeDrawer, setIsSwipeDrawer, nodeId, setNodeId } = useUiContext();
-  let cy: Core;
+  const { point, setPoint, routes, activeRoute } = useStationContext();
+  const { nodeId, setNodeId, isShowPickNode, setIsShowPickNode } =
+    useUiContext();
+  const cyRef = useRef<null | Core>(null);
+  const currentRoute = routes[activeRoute];
   // COMMENT: Prepare Nodes
   const nodes: ElementDefinition[] = stations.map(
     (record: Station): ElementDefinition => {
@@ -52,10 +55,11 @@ const SubwayMap = () => {
     }
   );
   // Prepare Edge
-  const edges: ElementDefinition[] = routes.map(
+  const edges: ElementDefinition[] = subwayRoutes.map(
     (record: Route): ElementDefinition => {
       return {
         data: {
+          refer: `${record.key}`,
           source: `${record.id_from}`,
           target: `${record.id_to}`,
           route_type: record.route_type,
@@ -67,27 +71,11 @@ const SubwayMap = () => {
   // Combine Element
   const elements: ElementDefinition[] = [...nodes, ...edges];
   const pickStation = findNodeStation(nodeId);
-
-  // COMMENT: handle node/edge action
-  const handleCy = (cy: Core): void => {
-    if (cy !== undefined) {
-      cy.on("tap", "node", (event) => {
-        const node = event.target;
-        // Hold node id ไว้ด้วย
-        setIsSwipeDrawer(true);
-        if (node !== undefined && node.data()?.id !== undefined) {
-          setNodeId(node.data().id);
-        }
-      });
-    }
-    return;
-  };
-
   // COMMENT: Swipe drawer action
   const handleCloseSwipeDrawer = (
     event: React.SyntheticEvent<{}, Event>
   ): void => {
-    setIsSwipeDrawer(false);
+    setIsShowPickNode(false);
   };
   // COMMENT: Not implement yet depending on usecase.
   const handleOpenSwipeDrawer = (
@@ -104,7 +92,7 @@ const SubwayMap = () => {
     } else {
       setPoint({ ...point, from: pickStation });
     }
-    setIsSwipeDrawer(false);
+    setIsShowPickNode(false);
   };
   // COMMENT: Handle station pick to end point
   const handleSetTo = (
@@ -115,33 +103,98 @@ const SubwayMap = () => {
     } else {
       setPoint({ ...point, to: pickStation });
     }
-    setIsSwipeDrawer(false);
+    setIsShowPickNode(false);
   };
+  // COMMENT: cleanup cytoscape listeners on unmount
+  useEffect(() => {
+    return () => {
+      if (cyRef.current) {
+        cyRef.current.removeAllListeners();
+        cyRef.current = null;
+      }
+    };
+  }, []);
+  // COMMENT: Cytoscape is ready to use
+  const cyCallback = useCallback((cy: Core): void => {
+    // this is called each render of the component, don't add more listeners
+    if (cyRef.current) return;
+    cyRef.current = cy;
+    cyRef.current.ready(() => {});
+    cyRef.current?.pan({ x: -401954, y: 55595 });
+    cyRef.current?.on("tap", "node", (event) => {
+      const node = event.target;
+      // Hold node id ไว้ด้วย
+      setIsShowPickNode(true);
+      if (node !== undefined && node.data()?.id !== undefined) {
+        setNodeId(node.data().id);
+      }
+    });
+  }, []);
+  // COMMENT: handle effect once point is changed
+  useEffect(() => {
+    if (cyRef !== null) {
+      cyRef.current?.elements().removeClass("start end");
+    }
+    if (point?.from?.id !== undefined) {
+      // COMMENT: start node
+      const element = cyRef.current?.getElementById(`${point.from.id}`);
+      element?.addClass("start");
+    }
+    if (point?.to?.id !== undefined) {
+      // COMMENT: end node
+      const element = cyRef.current?.getElementById(`${point.to.id}`);
+      element?.addClass("end");
+    }
+  }, [point?.from, point?.to, cyRef]);
+  // COMMENT: set nodes to be path by current route
+  useEffect(() => {
+    if (cyRef !== null && currentRoute !== undefined) {
+      const edges = currentRoute.edges.map((record) => `${record.key}`);
+      cyRef.current?.startBatch();
+      cyRef.current?.elements().removeClass("path");
+      currentRoute.stations
+        .filter((id) => !(point.from?.id === id || point.to?.id === id))
+        .map((nodeId) =>
+          cyRef.current?.elements(`node#${nodeId}`).addClass("path")
+        );
+      cyRef.current?.edges().forEach((edge) => {
+        if (edges.indexOf(edge.data("refer")) !== -1) {
+          edge.addClass("path");
+        } else {
+          edge.addClass("not-path");
+        }
+      });
+      // currentRoute.edges.map((edge: Route) => {
+      //   cyRef.current?.elements(`[refer = '${edge.key}']`).addClass("path");
+      // });
+      cyRef.current?.endBatch();
+    }
+  }, [currentRoute]);
 
   return (
     <React.Fragment>
       <SwipeableDrawer
         anchor="bottom"
-        open={isSwipeDrawer}
+        open={isShowPickNode}
         onClose={handleCloseSwipeDrawer}
         onOpen={handleOpenSwipeDrawer}
         disableSwipeToOpen={true}
         PaperProps={{
           classes: {
-            root: "rounded-t-lg",
+            root: "rounded-t-lg bg-gray-600",
           },
         }}
         ModalProps={{
           keepMounted: true,
         }}
       >
-        <div className="bg-gray-600 rounded-t-lg">
+        <div className="rounded-t-lg p-1 bg-transparent">
           <Stack
             direction="row"
             spacing={0}
             justifyContent="space-between"
-            alignItems="center"
-            className="my-2"
+            alignItems="start"
+            className="m-2"
           >
             <Stack
               direction="column"
@@ -149,14 +202,19 @@ const SubwayMap = () => {
               alignItems="flex-start"
               spacing={0}
             >
-              <Typography variant="body1" className="px-2 py-1 text-white">
+              <Typography variant="body1" className="text-white" gutterBottom>
                 {pickStation && `${pickStation.name.en}`}
               </Typography>
-              <Typography variant="body1" className="px-2 py-1 text-white">
+              <Typography variant="body1" className="text-white">
                 {pickStation && `${pickStation.name.th}`}
               </Typography>
             </Stack>
-            <IconButton disableRipple onClick={handleCloseSwipeDrawer}>
+            <IconButton
+              className="p-0"
+              size="large"
+              disableRipple
+              onClick={handleCloseSwipeDrawer}
+            >
               <CancelIcon />
             </IconButton>
           </Stack>
@@ -193,8 +251,12 @@ const SubwayMap = () => {
       <CytoscapeComponent
         elements={elements}
         layout={layout}
+        panningEnabled
+        zoomingEnabled
+        minZoom={0.2}
+        maxZoom={0.8}
         className="w-screen h-screen bg-gray-600"
-        cy={handleCy}
+        cy={cyCallback}
         stylesheet={[
           {
             selector: "node",
@@ -221,7 +283,7 @@ const SubwayMap = () => {
               "text-outline-width": "10px",
               "z-index": 9999,
               "background-color": "#FC4C4C",
-              color: "#FC4C4C",
+              color: "#FFF",
             },
           },
           {
@@ -237,7 +299,22 @@ const SubwayMap = () => {
               "text-outline-width": "10px",
               "z-index": 9999,
               "background-color": "#FC4C4C",
-              color: "#FC4C4C",
+              color: "#FFF",
+            },
+          },
+          {
+            selector: "node.path",
+            style: {
+              width: 20,
+              height: 20,
+              "min-zoomed-font-size": 0,
+              "border-color": "#000",
+              "border-width": "10px",
+              "text-outline-color": "#000",
+              "text-outline-width": "10px",
+              "z-index": 9999,
+              "background-color": "#FC4C4C",
+              color: "#FFF",
             },
           },
           {
@@ -282,8 +359,21 @@ const SubwayMap = () => {
               opacity: 0.5,
             },
           },
+          {
+            selector: "edge.path",
+            style: {
+              opacity: 0.8,
+            },
+          },
+          {
+            selector: "edge.not-path",
+            style: {
+              opacity: 0.2,
+            },
+          },
         ]}
       />
+      <RoutePreviewDrawer ref={cyRef} />
     </React.Fragment>
   );
 };
