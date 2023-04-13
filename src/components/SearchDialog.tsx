@@ -17,7 +17,9 @@ import Slide from "@mui/material/Slide";
 import TextField from "@mui/material/TextField";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
+import { useTheme } from "@mui/material/styles";
 import { TransitionProps } from "@mui/material/transitions";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import React, { useContext, useMemo, useRef } from "react";
 import { DialogContext } from "../contexts/DialogContext";
 import { SearchContext } from "../contexts/SearchContext";
@@ -41,6 +43,8 @@ const SearchDialog = React.memo(() => {
   const dialogFrom = useMemo(() => dialog.from, [dialog]);
   const dialogTo = useMemo(() => dialog.to, [dialog]);
   const searchTextField = useRef<HTMLLinkElement>(null);
+  const theme = useTheme();
+  const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
 
   let searchValue: string;
   let title: string;
@@ -107,7 +111,7 @@ const SearchDialog = React.memo(() => {
   return (
     <Dialog
       fullScreen
-      open={dialogFrom || dialogTo}
+      open={(dialogFrom || dialogTo) && !isDesktop}
       onClose={handleCloseDialog}
       TransitionComponent={Transition}
     >

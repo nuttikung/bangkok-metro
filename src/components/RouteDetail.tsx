@@ -6,6 +6,8 @@ import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import Typography from "@mui/material/Typography";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import Journey from "../components/Journey";
 import { useStationContext } from "../contexts/StationContext";
 import { useUiContext } from "../contexts/UiContext";
@@ -13,6 +15,8 @@ import { useUiContext } from "../contexts/UiContext";
 const RouteDetail = () => {
   const { isShowRouteDetail, setIsShowRouteDetail } = useUiContext();
   const { routes, activeRoute, setIsPreviewRoute } = useStationContext();
+  const theme = useTheme();
+  const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
   const currentRoute = routes[activeRoute];
   // iOS
   const iOS =
@@ -37,7 +41,7 @@ const RouteDetail = () => {
       disableDiscovery={iOS}
       anchor="bottom"
       disableSwipeToOpen={true}
-      open={isShowRouteDetail}
+      open={isShowRouteDetail && !isDesktop}
       PaperProps={{
         className: "rounded-t-xl bg-gray-600 max-h-[85%] overflow-visible",
         elevation: 0,

@@ -10,6 +10,8 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import Typography from "@mui/material/Typography";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import React, { useContext, useMemo } from "react";
 import { DialogContext } from "../contexts/DialogContext";
 import { useStationContext } from "../contexts/StationContext";
@@ -20,6 +22,8 @@ const BottomDrawer: React.FunctionComponent = () => {
   const { dialog, setDialog } = useContext(DialogContext);
   const { point, setPoint, isPreviewRoute } = useStationContext();
   const { isShowMainDrawer, isShowRouteDetail } = useUiContext();
+  const theme = useTheme();
+  const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
   // COMMENT: iOS
   const iOS =
     typeof navigator !== "undefined" &&
@@ -100,7 +104,12 @@ const BottomDrawer: React.FunctionComponent = () => {
         onOpen={handleOpenMainDrawer}
         hideBackdrop
         anchor="bottom"
-        open={isShowMainDrawer && !isPreviewRoute && !isShowRouteDetail}
+        open={
+          isShowMainDrawer &&
+          !isPreviewRoute &&
+          !isShowRouteDetail &&
+          !isDesktop
+        }
         variant="persistent"
         disableBackdropTransition={!iOS}
         disableDiscovery={iOS}
@@ -118,7 +127,7 @@ const BottomDrawer: React.FunctionComponent = () => {
           className="px-2"
           onSubmit={handleFormSubmit}
         >
-          <Grid item xs={7}>
+          <Grid item xs={7} md={16}>
             <List component="div" role="group" className="w-full">
               <ListItem
                 disablePadding
@@ -175,7 +184,7 @@ const BottomDrawer: React.FunctionComponent = () => {
               <SwapHorizIcon fontSize="inherit" />
             </IconButton>
           </Grid>
-          <Grid item xs={7}>
+          <Grid item xs={7} md={16}>
             <List component="div" role="group" className="w-full">
               <ListItem
                 disablePadding

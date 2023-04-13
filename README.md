@@ -54,3 +54,5 @@ Install bangkok-metro with pnpm
 [x] Route preview show not clear
 
 [x] Safari browser got scroll on Y axis
+
+[x] Route highlight path is removed by route detail modal mount and unmount (Fixed by work around)

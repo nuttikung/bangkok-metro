@@ -31,8 +31,13 @@ const findNodeStation = (id: string): Station | undefined => {
 // TODO: Implement Hight light Nodes and Edge base on active/current routes (main concept is opacity)
 const SubwayMap = () => {
   const { point, setPoint, routes, activeRoute } = useStationContext();
-  const { nodeId, setNodeId, isShowPickNode, setIsShowPickNode } =
-    useUiContext();
+  const {
+    nodeId,
+    setNodeId,
+    isShowPickNode,
+    setIsShowPickNode,
+    isShowRouteDetail,
+  } = useUiContext();
   const cyRef = useRef<null | Core>(null);
   const currentRoute = routes[activeRoute];
   // COMMENT: Prepare Nodes
@@ -174,6 +179,28 @@ const SubwayMap = () => {
       }
     }
   }, [cyRef, currentRoute, point]);
+  // COMMENT: Work around -> path highlight
+  useEffect(() => {
+    if (cyRef !== null && currentRoute !== undefined) {
+      const node = cyRef.current?.elements(`node#${point?.from?.id}`);
+      const edges = currentRoute.edges.map((record) => `${record.key}`);
+      cyRef.current?.startBatch();
+      cyRef.current?.elements().removeClass("path");
+      currentRoute.stations
+        .filter((id) => !(point.from?.id === id || point.to?.id === id))
+        .map((nodeId) =>
+          cyRef.current?.elements(`node#${nodeId}`).addClass("path")
+        );
+      cyRef.current?.edges().forEach((edge) => {
+        if (edges.indexOf(edge.data("refer")) !== -1) {
+          edge.addClass("path");
+        } else {
+          edge.addClass("not-path");
+        }
+      });
+      cyRef.current?.endBatch();
+    }
+  }, [isShowRouteDetail]);
 
   return (
     <React.Fragment>

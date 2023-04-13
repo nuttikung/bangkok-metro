@@ -4,6 +4,8 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import DirectionsWalkIcon from "@mui/icons-material/DirectionsWalk";
 import { Button, Grid, MobileStepper, Typography } from "@mui/material";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { Core } from "cytoscape";
 import { addSeconds, format } from "date-fns";
 import prettyMilliseconds from "pretty-ms";
@@ -27,6 +29,8 @@ const RoutePreviewDrawer = forwardRef<Core, Props>(
       setIsPreviewRoute,
     } = useStationContext();
     const { setIsShowRouteDetail } = useUiContext();
+    const theme = useTheme();
+    const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
     const currentRoute = routes[activeRoute];
     const travelTime = prettyMilliseconds((currentRoute?.duration || 0) * 1000);
     const startTime = useMemo(() => format(searchDate, "HH:mm"), [searchDate]);
@@ -113,10 +117,6 @@ const RoutePreviewDrawer = forwardRef<Core, Props>(
     const handleClearSearch = (
       event: React.SyntheticEvent<{}, Event>
     ): void => {
-      // const cyRef = ref as React.MutableRefObject<Core>;
-      // if (cyRef !== null) {
-      //   cyRef.current.elements().removeClass("start end path");
-      // }
       setPoint({ from: undefined, to: undefined });
       setIsPreviewRoute(false);
     };
@@ -126,7 +126,7 @@ const RoutePreviewDrawer = forwardRef<Core, Props>(
         disableBackdropTransition={!iOS}
         disableDiscovery={iOS}
         anchor="bottom"
-        open={isPreviewRoute}
+        open={isPreviewRoute && !isDesktop}
         variant="persistent"
         hideBackdrop
         allowSwipeInChildren
