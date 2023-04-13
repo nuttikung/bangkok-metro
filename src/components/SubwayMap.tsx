@@ -46,7 +46,7 @@ const SubwayMap = () => {
           // lon: record.lng,
           // station_name: record.name.th,
         },
-        position: {
+        renderedPosition: {
           x: record.lng * 20000,
           y: record.lat * -20000,
         },
@@ -119,8 +119,11 @@ const SubwayMap = () => {
     // this is called each render of the component, don't add more listeners
     if (cyRef.current) return;
     cyRef.current = cy;
-    cyRef.current.ready(() => {});
-    cyRef.current?.pan({ x: -401954, y: 55595 });
+    cyRef.current.ready(() => {
+      // console.log("ready to search");
+    });
+    const node = cyRef.current?.elements("node#21");
+    cyRef.current?.fit(node);
     cyRef.current?.on("tap", "node", (event) => {
       const node = event.target;
       // Hold node id ไว้ด้วย
@@ -133,22 +136,21 @@ const SubwayMap = () => {
   // COMMENT: handle effect once point is changed
   useEffect(() => {
     if (cyRef !== null) {
+      // COMMENT: clear start and end then reapply
       cyRef.current?.elements().removeClass("start end");
-    }
-    if (point?.from?.id !== undefined) {
-      // COMMENT: start node
-      const element = cyRef.current?.getElementById(`${point.from.id}`);
-      element?.addClass("start");
-    }
-    if (point?.to?.id !== undefined) {
-      // COMMENT: end node
-      const element = cyRef.current?.getElementById(`${point.to.id}`);
-      element?.addClass("end");
+      if (point?.from?.id !== undefined) {
+        cyRef.current?.getElementById(`${point.from.id}`).addClass("start");
+      }
+      if (point?.to?.id !== undefined) {
+        cyRef.current?.getElementById(`${point.to.id}`).addClass("end");
+      }
     }
   }, [point?.from, point?.to, cyRef]);
   // COMMENT: set nodes to be path by current route
   useEffect(() => {
     if (cyRef !== null && currentRoute !== undefined) {
+      const node = cyRef.current?.elements(`node#${point?.from?.id}`);
+      cyRef.current?.center(node);
       const edges = currentRoute.edges.map((record) => `${record.key}`);
       cyRef.current?.startBatch();
       cyRef.current?.elements().removeClass("path");
@@ -164,12 +166,14 @@ const SubwayMap = () => {
           edge.addClass("not-path");
         }
       });
-      // currentRoute.edges.map((edge: Route) => {
-      //   cyRef.current?.elements(`[refer = '${edge.key}']`).addClass("path");
-      // });
       cyRef.current?.endBatch();
+    } else {
+      // COMMENT: clear all preview route
+      if (cyRef !== null) {
+        cyRef.current?.elements().removeClass("path");
+      }
     }
-  }, [currentRoute]);
+  }, [cyRef, currentRoute, point]);
 
   return (
     <React.Fragment>
@@ -255,7 +259,7 @@ const SubwayMap = () => {
         zoomingEnabled
         minZoom={0.2}
         maxZoom={0.8}
-        className="w-screen h-screen bg-gray-600"
+        className="w-screen h-[100svh] bg-gray-600"
         cy={cyCallback}
         stylesheet={[
           {
@@ -363,12 +367,7 @@ const SubwayMap = () => {
             selector: "edge.path",
             style: {
               opacity: 0.8,
-            },
-          },
-          {
-            selector: "edge.not-path",
-            style: {
-              opacity: 0.2,
+              "line-color": "#000",
             },
           },
         ]}

@@ -42,7 +42,7 @@ const RouteDetail = () => {
         className: "rounded-t-xl bg-gray-600 max-h-[85%] overflow-visible",
         elevation: 0,
       }}
-      ModalProps={{ keepMounted: true }}
+      ModalProps={{ keepMounted: false }}
       onOpen={() => {}}
       onClose={handleCloseRouteDetail}
     >
@@ -85,40 +85,3 @@ const RouteDetail = () => {
 };
 
 export default RouteDetail;
-
-//       <div className="sticky top-0 bg-white z-50">
-//         <Stack
-//           direction="row"
-//           justifyContent="space-between"
-//           alignItems="center"
-//           className="p-2"
-//         >
-//           <Typography
-//             variant="button"
-//             className="text-gray-600 font-semibold normal-case"
-//           >
-//             {currentRoute.duration / 60} minutes
-//           </Typography>
-//           <Button
-//             variant="text"
-//             disableRipple
-//             className="text-primary normal-case"
-//             onClick={handleCloseRouteClick}
-//           >
-//             Close
-//           </Button>
-//         </Stack>
-//         <Divider />
-//       </div>
-//       <Timeline
-//         sx={{
-//           [`& .${timelineItemClasses.root}:before`]: {
-//             flex: 0,
-//             padding: 0,
-//           },
-//         }}
-//         className="mt-0"
-//       >
-//         <JourneyTimeline {...currentRoute} />
-//       </Timeline>
-//     </React.Fragment>

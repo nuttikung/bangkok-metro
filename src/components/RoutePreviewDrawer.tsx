@@ -113,10 +113,10 @@ const RoutePreviewDrawer = forwardRef<Core, Props>(
     const handleClearSearch = (
       event: React.SyntheticEvent<{}, Event>
     ): void => {
-      const cyRef = ref as React.MutableRefObject<Core>;
-      if (cyRef !== null) {
-        cyRef.current.elements().removeClass("start end path");
-      }
+      // const cyRef = ref as React.MutableRefObject<Core>;
+      // if (cyRef !== null) {
+      //   cyRef.current.elements().removeClass("start end path");
+      // }
       setPoint({ from: undefined, to: undefined });
       setIsPreviewRoute(false);
     };

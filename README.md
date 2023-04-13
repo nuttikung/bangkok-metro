@@ -48,3 +48,9 @@ Install bangkok-metro with pnpm
 [ ] Change theme of project
 
 [ ] Making Desktop UI (Separate with mobile)
+
+## Issue
+
+[x] Route preview show not clear
+
+[x] Safari browser got scroll on Y axis
