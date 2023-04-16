@@ -1,4 +1,5 @@
 import React from "react";
+import DesktopDrawer from "./components/DesktopDrawer";
 import RouteDetail from "./components/RouteDetail";
 import SubwayMain from "./components/SubwayMain";
 import SubwayMap from "./components/SubwayMap";
@@ -16,6 +17,7 @@ const App: React.FunctionComponent = () => {
             <SubwayMap />
             <SubwayMain />
             <RouteDetail />
+            <DesktopDrawer />
           </StationProvider>
         </SearchProvider>
       </DialogProvider>

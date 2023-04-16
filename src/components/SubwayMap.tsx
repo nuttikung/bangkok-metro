@@ -6,6 +6,8 @@ import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import Typography from "@mui/material/Typography";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { Core, ElementDefinition } from "cytoscape";
 import React, { useCallback, useEffect, useRef } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
@@ -38,6 +40,10 @@ const SubwayMap = () => {
     setIsShowPickNode,
     isShowRouteDetail,
   } = useUiContext();
+
+  const theme = useTheme();
+  const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
+
   const cyRef = useRef<null | Core>(null);
   const currentRoute = routes[activeRoute];
   // COMMENT: Prepare Nodes
@@ -155,7 +161,14 @@ const SubwayMap = () => {
   useEffect(() => {
     if (cyRef !== null && currentRoute !== undefined) {
       const node = cyRef.current?.elements(`node#${point?.from?.id}`);
-      cyRef.current?.center(node);
+      const nodes = cyRef.current?.elements(
+        `node#${point?.to?.id}, node#${point?.from?.id}`
+      );
+      if (isDesktop) {
+        cyRef.current?.fit(nodes);
+      } else {
+        cyRef.current?.center(node);
+      }
       const edges = currentRoute.edges.map((record) => `${record.key}`);
       cyRef.current?.startBatch();
       cyRef.current?.elements().removeClass("path");
@@ -178,7 +191,7 @@ const SubwayMap = () => {
         cyRef.current?.elements().removeClass("path");
       }
     }
-  }, [cyRef, currentRoute, point]);
+  }, [cyRef, currentRoute, point, isDesktop]);
   // COMMENT: Work around -> path highlight
   useEffect(() => {
     if (cyRef !== null && currentRoute !== undefined) {

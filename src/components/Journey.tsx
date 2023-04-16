@@ -104,7 +104,7 @@ const StationCard = React.memo(
           {connector}
         </TimelineSeparator>
         <TimelineContent>
-          <Paper className="station-card bg-gray-600" elevation={0}>
+          <Paper className="station-card bg-transparent" elevation={0}>
             <Typography variant="body1" className="mt-3 text-white">
               {name.en}
             </Typography>

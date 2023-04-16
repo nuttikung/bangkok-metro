@@ -50,7 +50,7 @@ const RoutePreviewDrawer = forwardRef<Core, Props>(
         (value) => value.type === JourneyType.TRANSFER
       ).length || 0;
 
-    let trasnferText =
+    let transferText =
       transferAmount > 1
         ? `${transferAmount} transfers`
         : `${transferAmount} transfer`;
@@ -63,7 +63,7 @@ const RoutePreviewDrawer = forwardRef<Core, Props>(
       timePreview = (
         <React.Fragment>
           <Typography variant="caption" className="text-white font-semibold">
-            {startTime} - {endTime} ({travelTime}), {trasnferText}
+            {startTime} - {endTime} ({travelTime}), {transferText}
           </Typography>
         </React.Fragment>
       );
