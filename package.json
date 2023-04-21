@@ -18,13 +18,15 @@
     "@mui/material": "^5.11.16",
     "cytoscape": "3.23",
     "date-fns": "^2.29.3",
-    "pretty-ms": "^8.0.0",
+    "humanize-duration": "^3.28.0",
     "react": "^18.2.0",
     "react-cytoscapejs": "^2.0.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "talkr": "^3.4.0"
   },
   "devDependencies": {
     "@types/cytoscape": "^3.19.9",
+    "@types/humanize-duration": "^3.27.1",
     "@types/react": "^18.0.28",
     "@types/react-cytoscapejs": "^1.2.2",
     "@types/react-dom": "^18.0.11",

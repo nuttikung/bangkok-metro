@@ -13,6 +13,7 @@ import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import React, { useContext, useMemo } from "react";
+import { useT } from "talkr";
 import { DialogContext } from "../contexts/DialogContext";
 import { useStationContext } from "../contexts/StationContext";
 import { useUiContext } from "../contexts/UiContext";
@@ -22,6 +23,7 @@ const BottomDrawer: React.FunctionComponent = () => {
   const { dialog, setDialog } = useContext(DialogContext);
   const { point, setPoint, isPreviewRoute } = useStationContext();
   const { isShowMainDrawer, isShowRouteDetail } = useUiContext();
+  const { T } = useT();
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
   // COMMENT: iOS
@@ -163,7 +165,7 @@ const BottomDrawer: React.FunctionComponent = () => {
                         className="text-gray-300"
                       >
                         {point.from?.id === undefined
-                          ? "From"
+                          ? T("label.from")
                           : point.from.name.en}
                       </Typography>
                     }
@@ -217,7 +219,9 @@ const BottomDrawer: React.FunctionComponent = () => {
                         noWrap
                         className="text-gray-300"
                       >
-                        {point.to?.id === undefined ? "To" : point.to.name.en}
+                        {point.to?.id === undefined
+                          ? T("label.to")
+                          : point.to.name.en}
                       </Typography>
                     }
                   />

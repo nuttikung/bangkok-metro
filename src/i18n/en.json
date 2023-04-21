@@ -1,0 +1,19 @@
+{
+  "label": {
+    "from": "FROM",
+    "to": "TO",
+    "detail": "Detail",
+    "clear": "Clear",
+    "transfer": "Transfer",
+    "total-journey": "Total",
+    "transfer-count": {
+      "zero": "no transfer",
+      "one": "1 transfer",
+      "many": "__count__ transfers"
+    },
+    "station-count": {
+      "one": "1 station",
+      "many": "__count__ stations"
+    }
+  }
+}

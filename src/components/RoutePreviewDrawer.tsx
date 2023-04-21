@@ -8,8 +8,9 @@ import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { Core } from "cytoscape";
 import { addSeconds, format } from "date-fns";
-import prettyMilliseconds from "pretty-ms";
+import humanizeDuration from "humanize-duration";
 import React, { forwardRef, useMemo } from "react";
+import { useT } from "talkr";
 import { useStationContext } from "../contexts/StationContext";
 import { useUiContext } from "../contexts/UiContext";
 import { JourneyType } from "../data";
@@ -31,8 +32,11 @@ const RoutePreviewDrawer = forwardRef<Core, Props>(
     const { setIsShowRouteDetail } = useUiContext();
     const theme = useTheme();
     const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
+    const { T, locale } = useT();
     const currentRoute = routes[activeRoute];
-    const travelTime = prettyMilliseconds((currentRoute?.duration || 0) * 1000);
+    const travelTime = humanizeDuration((currentRoute?.duration || 0) * 1000, {
+      language: locale,
+    });
     const startTime = useMemo(() => format(searchDate, "HH:mm"), [searchDate]);
     const endTime = useMemo(
       () =>
@@ -50,10 +54,7 @@ const RoutePreviewDrawer = forwardRef<Core, Props>(
         (value) => value.type === JourneyType.TRANSFER
       ).length || 0;
 
-    let transferText =
-      transferAmount > 1
-        ? `${transferAmount} transfers`
-        : `${transferAmount} transfer`;
+    const transferText = T("label.transfer-count", { count: transferAmount });
 
     let routePreview: JSX.Element | JSX.Element[] | null = null;
     let timePreview: JSX.Element | null = null;
@@ -191,7 +192,7 @@ const RoutePreviewDrawer = forwardRef<Core, Props>(
               disableRipple
               onClick={handleShowRouteDetail}
             >
-              Detail
+              {T("label.detail")}
             </Button>
           </Grid>
           <Grid item xs={6} className="px-2 mt-2">
@@ -203,7 +204,7 @@ const RoutePreviewDrawer = forwardRef<Core, Props>(
               disableRipple
               onClick={handleClearSearch}
             >
-              Clear
+              {T("label.clear")}
             </Button>
           </Grid>
         </Grid>

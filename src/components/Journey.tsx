@@ -7,7 +7,9 @@ import TimelineItem from "@mui/lab/TimelineItem";
 import TimelineSeparator from "@mui/lab/TimelineSeparator";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
+import humanizeDuration from "humanize-duration";
 import React from "react";
+import { useT } from "talkr";
 import { JourneyType, Section, Station, routes } from "../data";
 import { Colors } from "../utils";
 
@@ -55,6 +57,7 @@ const StationCard = React.memo(
     total,
   }: StationCardProps) => {
     const colorClass = Colors[line];
+    const { T, locale } = useT();
     let icon: JSX.Element;
     let connector: JSX.Element | null = null;
     let description: JSX.Element | null = null;
@@ -84,13 +87,15 @@ const StationCard = React.memo(
     if (isFirst && isTransfer) {
       description = (
         <Typography variant="subtitle1" className={"text-white"}>
-          Transfer {duration / 60} minutes
+          {T("label.transfer")}{" "}
+          {humanizeDuration(duration * 1000, { language: locale })}
         </Typography>
       );
     } else if (isFirst) {
       description = (
         <Typography variant="subtitle1" className={"text-white"}>
-          {total} station(s) {duration / 60} minutes
+          {T("label.station-count", { count: total })}{" "}
+          {humanizeDuration(duration * 1000, { language: locale })}
         </Typography>
       );
     } else {
@@ -106,10 +111,7 @@ const StationCard = React.memo(
         <TimelineContent>
           <Paper className="station-card bg-transparent" elevation={0}>
             <Typography variant="body1" className="mt-3 text-white">
-              {name.en}
-            </Typography>
-            <Typography variant="body1" className="text-white">
-              {name.th}
+              {locale === "en" ? name.en : name.th}
             </Typography>
             {lineAbbr}
             {description}

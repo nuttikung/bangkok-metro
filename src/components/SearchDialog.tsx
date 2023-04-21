@@ -21,6 +21,7 @@ import { useTheme } from "@mui/material/styles";
 import { TransitionProps } from "@mui/material/transitions";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import React, { useContext, useMemo, useRef } from "react";
+import { useT } from "talkr";
 import { DialogContext } from "../contexts/DialogContext";
 import { SearchContext } from "../contexts/SearchContext";
 import { StationContext } from "../contexts/StationContext";
@@ -45,14 +46,15 @@ const SearchDialog = React.memo(() => {
   const searchTextField = useRef<HTMLLinkElement>(null);
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
+  const { T } = useT();
 
   let searchValue: string;
   let title: string;
   if (dialogFrom) {
-    title = "From";
+    title = T("label.from");
     searchValue = search.from;
   } else {
-    title = "To";
+    title = T("label.to");
     searchValue = search.to;
   }
 

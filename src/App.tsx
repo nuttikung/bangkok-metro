@@ -3,6 +3,7 @@ import DesktopDrawer from "./components/DesktopDrawer";
 import RouteDetail from "./components/RouteDetail";
 import SubwayMain from "./components/SubwayMain";
 import SubwayMap from "./components/SubwayMap";
+import TranslateIcon from "./components/TranslateIcon";
 import DialogProvider from "./contexts/DialogContext";
 import SearchProvider from "./contexts/SearchContext";
 import StationProvider from "./contexts/StationContext";
@@ -14,6 +15,7 @@ const App: React.FunctionComponent = () => {
       <DialogProvider>
         <SearchProvider>
           <StationProvider>
+            <TranslateIcon />
             <SubwayMap />
             <SubwayMain />
             <RouteDetail />

@@ -1,7 +1,6 @@
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import DirectionsWalkIcon from "@mui/icons-material/DirectionsWalk";
 import InfoIcon from "@mui/icons-material/Info";
-import PanoramaFishEyeIcon from "@mui/icons-material/PanoramaFishEye";
 import Timeline from "@mui/lab/Timeline";
 import TimelineDot from "@mui/lab/TimelineDot";
 import { timelineItemClasses } from "@mui/lab/TimelineItem";
@@ -18,8 +17,9 @@ import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { addSeconds, format } from "date-fns";
-import prettyMilliseconds from "pretty-ms";
+import humanizeDuration from "humanize-duration";
 import React, { useRef } from "react";
+import { useT } from "talkr";
 import Journey from "../components/Journey";
 import { useStationContext } from "../contexts/StationContext";
 import { JourneyType } from "../data/journey";
@@ -30,6 +30,7 @@ import { Colors } from "../utils/Color";
 const DesktopDrawer = () => {
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
+  const { T, locale } = useT();
   const { point, setPoint, routes, activeRoute, setActiveRoute, searchDate } =
     useStationContext();
   const ref = useRef<HTMLDivElement>(null);
@@ -103,20 +104,6 @@ const DesktopDrawer = () => {
       ref?.current?.scrollIntoView({ behavior: "smooth" });
     };
 
-  // const handleBackToTop = (
-  //   event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  // ): void => {
-  // };
-
-  // <Fab
-  //       aria-label="back-to-top"
-  //       size="small"
-  //       className="fixed bottom-4 left-4"
-  //       onClick={handleBackToTop}
-  //     >
-  //       <KeyboardArrowUpIcon />
-  //     </Fab>
-
   return (
     <Drawer
       className="max-w-[310px]"
@@ -159,7 +146,7 @@ const DesktopDrawer = () => {
               return (
                 <TextField
                   {...params}
-                  label="From"
+                  label={T("label.from")}
                   fullWidth
                   InputLabelProps={{
                     ...params.InputLabelProps,
@@ -245,7 +232,7 @@ const DesktopDrawer = () => {
               return (
                 <TextField
                   {...params}
-                  label="To"
+                  label={T("label.to")}
                   fullWidth
                   InputLabelProps={{
                     ...params.InputLabelProps,
@@ -305,7 +292,9 @@ const DesktopDrawer = () => {
         <Grid container spacing={0} className="my-2">
           {routes.map((record, index: number) => {
             // TODO: Extract to new component to manager this.
-            const travelTime = prettyMilliseconds(record.duration * 1000);
+            const travelTime = humanizeDuration(record.duration * 1000, {
+              language: locale,
+            });
             const startTime = format(searchDate, "HH:mm");
             const endTime = format(
               addSeconds(searchDate, record?.duration || 0),
@@ -315,10 +304,9 @@ const DesktopDrawer = () => {
               record.journey.filter(
                 (value) => value.type === JourneyType.TRANSFER
               ).length || 0;
-            const transferText =
-              transferAmount > 1
-                ? `${transferAmount} transfers`
-                : `${transferAmount} transfer`;
+            const transferText = T("label.transfer-count", {
+              count: transferAmount,
+            });
             const routePreview =
               record.lines?.length === 0 ? (
                 <DirectionsWalkIcon className="text-gray-800" />
@@ -365,11 +353,7 @@ const DesktopDrawer = () => {
                       {routePreview}
                     </Grid>
                   </Grid>
-                  {activeRoute === index ? (
-                    <PanoramaFishEyeIcon />
-                  ) : (
-                    <InfoIcon />
-                  )}
+                  {activeRoute !== index && <InfoIcon />}
                 </ListItemButton>
                 <Collapse
                   in={activeRoute === index}

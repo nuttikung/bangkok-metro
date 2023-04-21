@@ -8,6 +8,8 @@ import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import humanizeDuration from "humanize-duration";
+import { useT } from "talkr";
 import Journey from "../components/Journey";
 import { useStationContext } from "../contexts/StationContext";
 import { useUiContext } from "../contexts/UiContext";
@@ -17,6 +19,7 @@ const RouteDetail = () => {
   const { routes, activeRoute, setIsPreviewRoute } = useStationContext();
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
+  const { T, locale } = useT();
   const currentRoute = routes[activeRoute];
   // iOS
   const iOS =
@@ -58,7 +61,10 @@ const RouteDetail = () => {
           className="p-2"
         >
           <Typography variant="body1" className="text-white normal-case px-2">
-            {currentRoute.duration / 60} minutes
+            {T("label.total-journey")}{" "}
+            {humanizeDuration(currentRoute.duration * 1000, {
+              language: locale,
+            })}
           </Typography>
           <IconButton
             aria-label="close"

@@ -9,8 +9,9 @@ import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { Core, ElementDefinition } from "cytoscape";
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
+import { useT } from "talkr";
 import { useStationContext } from "../contexts/StationContext";
 import { useUiContext } from "../contexts/UiContext";
 import { subwayLines as lines } from "../data/line";
@@ -43,27 +44,30 @@ const SubwayMap = () => {
 
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
+  const { T, locale } = useT();
 
   const cyRef = useRef<null | Core>(null);
   const currentRoute = routes[activeRoute];
   // COMMENT: Prepare Nodes
-  const nodes: ElementDefinition[] = stations.map(
-    (record: Station): ElementDefinition => {
-      return {
-        data: {
-          id: `${record.id}`,
-          label: record.name.en,
-          // lat: record.lat,
-          // lon: record.lng,
-          // station_name: record.name.th,
-        },
-        renderedPosition: {
-          x: record.lng * 20000,
-          y: record.lat * -20000,
-        },
-        grabbable: false,
-      };
-    }
+  const nodes: ElementDefinition[] = useMemo(
+    () =>
+      stations.map((record: Station): ElementDefinition => {
+        return {
+          data: {
+            id: `${record.id}`,
+            label: locale === "en" ? record.name.en : record.name.th,
+            // lat: record.lat,
+            // lon: record.lng,
+            // station_name: record.name.th,
+          },
+          renderedPosition: {
+            x: record.lng * 20000,
+            y: record.lat * -20000,
+          },
+          grabbable: false,
+        };
+      }),
+    [locale]
   );
   // Prepare Edge
   const edges: ElementDefinition[] = subwayRoutes.map(
@@ -156,7 +160,7 @@ const SubwayMap = () => {
         cyRef.current?.getElementById(`${point.to.id}`).addClass("end");
       }
     }
-  }, [point?.from, point?.to, cyRef]);
+  }, [point?.from, point?.to, cyRef, locale]);
   // COMMENT: set nodes to be path by current route
   useEffect(() => {
     if (cyRef !== null && currentRoute !== undefined) {
@@ -164,11 +168,7 @@ const SubwayMap = () => {
       const nodes = cyRef.current?.elements(
         `node#${point?.to?.id}, node#${point?.from?.id}`
       );
-      if (isDesktop) {
-        cyRef.current?.fit(nodes);
-      } else {
-        cyRef.current?.center(node);
-      }
+      cyRef.current?.fit(nodes);
       const edges = currentRoute.edges.map((record) => `${record.key}`);
       cyRef.current?.startBatch();
       cyRef.current?.elements().removeClass("path");
@@ -191,7 +191,7 @@ const SubwayMap = () => {
         cyRef.current?.elements().removeClass("path");
       }
     }
-  }, [cyRef, currentRoute, point, isDesktop]);
+  }, [cyRef, currentRoute, point, isDesktop, locale]);
   // COMMENT: Work around -> path highlight
   useEffect(() => {
     if (cyRef !== null && currentRoute !== undefined) {
@@ -213,7 +213,7 @@ const SubwayMap = () => {
       });
       cyRef.current?.endBatch();
     }
-  }, [isShowRouteDetail]);
+  }, [isShowRouteDetail, locale]);
 
   return (
     <React.Fragment>
@@ -247,11 +247,11 @@ const SubwayMap = () => {
               spacing={0}
             >
               <Typography variant="body1" className="text-white" gutterBottom>
-                {pickStation && `${pickStation.name.en}`}
+                {locale === "en" && pickStation !== undefined
+                  ? `${pickStation?.name.en}`
+                  : `${pickStation?.name.th}`}
               </Typography>
-              <Typography variant="body1" className="text-white">
-                {pickStation && `${pickStation.name.th}`}
-              </Typography>
+              <Typography variant="body1" className="text-white"></Typography>
             </Stack>
             <IconButton
               className="p-0"
@@ -277,7 +277,7 @@ const SubwayMap = () => {
               disableRipple
               onClick={handleSetFrom}
             >
-              From
+              {T("label.from")}
             </Button>
             <Button
               variant="contained"
@@ -287,7 +287,7 @@ const SubwayMap = () => {
               disableRipple
               onClick={handleSetTo}
             >
-              To
+              {T("label.to")}
             </Button>
           </Stack>
         </div>
