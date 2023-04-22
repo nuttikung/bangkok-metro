@@ -191,7 +191,7 @@ const SubwayMap = () => {
         cyRef.current?.elements().removeClass("path");
       }
     }
-  }, [cyRef, currentRoute, point, isDesktop, locale]);
+  }, [cyRef, currentRoute, point, isDesktop, locale, isShowPickNode]);
   // COMMENT: Work around -> path highlight
   useEffect(() => {
     if (cyRef !== null && currentRoute !== undefined) {

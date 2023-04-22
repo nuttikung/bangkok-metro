@@ -58,3 +58,5 @@ Install bangkok-metro with pnpm
 [x] Safari browser got scroll on Y axis
 
 [x] Route highlight path is removed by route detail modal mount and unmount (Fixed by work around)
+
+[x] Route highlight not showing when tap node
