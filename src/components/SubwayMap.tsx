@@ -168,7 +168,7 @@ const SubwayMap = () => {
       const nodes = cyRef.current?.elements(
         `node#${point?.to?.id}, node#${point?.from?.id}`
       );
-      cyRef.current?.fit(nodes);
+      // cyRef.current?.fit(nodes);
       const edges = currentRoute.edges.map((record) => `${record.key}`);
       cyRef.current?.startBatch();
       cyRef.current?.elements().removeClass("path");
