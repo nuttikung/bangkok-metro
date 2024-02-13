@@ -35,9 +35,9 @@ Install bangkok-metro with pnpm
 
 - Support Desktop/Ipad/Mobile (Mobile = Ipad)
 
-## Todo
+- Support Yellow Line
 
-[ ] Station search need improve on FP programming (Optimization)
+## Todo
 
 [ ] Memoization with client DB [Dexie.js](https://dexie.org)
 
@@ -47,9 +47,19 @@ Install bangkok-metro with pnpm
 
 [ ] i18n (Chinese)
 
+[x] Making Desktop UI (Separate with mobile)
+
+[x] Support Pink Line (0.20)
+
+[ ] Change Tech to Rxjs, Context
+
+[ ] Station search need improve on FP programming (Optimization)
+
+[ ] Search should support removing space and case insensitive
+
 [ ] Change theme of project (Need help!)
 
-[x] Making Desktop UI (Separate with mobile)
+[ ] Remake route component it's too heavy
 
 ## Issue
 
@@ -60,3 +70,8 @@ Install bangkok-metro with pnpm
 [x] Route highlight path is removed by route detail modal mount and unmount (Fixed by work around)
 
 [x] Route highlight not showing when tap node
+
+
+## Version history
+#### 0.20
+- Support Pink Line
