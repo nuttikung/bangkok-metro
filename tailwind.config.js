@@ -19,6 +19,8 @@ export default {
         'SUBWAY-RED-NORTH': '#E10506',
         'SUBWAY-RED-WEST': '#FD5353',
         'SUBWAY-PINK': '#D76886',
+        'SUBWAY-YELLOW': '#FAD53D',
+        'SUBWAY-PINK-BRANCH': '#D76886',
         'primary': '#3f48c1',
         'secondary': '#fdc500',
         'icon': '#202a3a'
@@ -27,4 +29,3 @@ export default {
   },
   plugins: [],
 }
-

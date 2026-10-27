@@ -13,6 +13,8 @@ export const Colors: ColorVariant = {
 	"Red north": "!bg-SUBWAY-RED-NORTH",
 	"Red west": "!bg-SUBWAY-RED-WEST",
 	Pink: "!bg-SUBWAY-PINK",
+	Yellow: "!bg-SUBWAY-YELLOW",
+	"Pink branch": "!bg-SUBWAY-PINK-BRANCH",
 };
 
 export const NodeColors: ColorVariant = {
@@ -25,6 +27,8 @@ export const NodeColors: ColorVariant = {
 	"Red north": "border-SUBWAY-RED-NORTH",
 	"Red west": "border-SUBWAY-RED-WEST",
 	Pink: "border-SUBWAY-PINK",
+	Yellow: "border-SUBWAY-YELLOW",
+	"Pink branch": "border-SUBWAY-PINK-BRANCH",
 };
 
 export default Colors;

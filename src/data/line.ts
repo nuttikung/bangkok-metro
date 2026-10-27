@@ -86,6 +86,23 @@ export const subwayLines: Line[] = [
 			219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233,
 		],
 	},
+	{
+		id: 10,
+		name: "Yellow",
+		color: "#FAD53D",
+		code: "SUBWAY-YELLOW",
+		stations: [
+			338, 339, 340, 341, 342, 343, 344, 345, 346, 347, 348, 349,
+			350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360,
+		],
+	},
+	{
+		id: 11,
+		name: "Pink branch",
+		color: "#D76886",
+		code: "SUBWAY-PINK-BRANCH",
+		stations: [361, 362, 363],
+	},
 ];
 
 export default subwayLines;
