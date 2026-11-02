@@ -16,11 +16,27 @@ Please adhere to this project's `code of conduct`.
 
 ## Installation
 
-Install bangkok-metro with pnpm
+Install bangkok-metro with Bun (use the version in `package.json`).
 
 ```bash
   cd bangkok-metro
-  pnpm install
+  bun install
+```
+
+## Formatting
+
+This project uses Oxfmt. Run `bun run format` to format the project, or
+`bun run format:check` to check formatting without changing files.
+Settings are in `.oxfmtrc.json`; generated output and `bun.lock` are excluded.
+
+## Import aliases
+
+Imports can use `@/` to refer to `src/`:
+
+```tsx
+import MetroMap from "@/components/MetroMap";
+// Or use a named export from the components directory:
+import { MetroMap, TranslateIcon } from "@/components";
 ```
 
 ## Tech Stack
@@ -71,7 +87,8 @@ Install bangkok-metro with pnpm
 
 [x] Route highlight not showing when tap node
 
-
 ## Version history
+
 #### 0.20
+
 - Support Pink Line

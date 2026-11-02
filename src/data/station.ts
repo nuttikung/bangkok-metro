@@ -1,24 +1,9 @@
-export enum STATUS {
-	CLOSE = 0,
-	OPEN = 1,
-}
-
-export type Station = {
-	id: number;
-	line: string;
-	status: STATUS;
-	code: string;
-	name: {
-		en: string;
-		th: string;
-	};
-	lat: number;
-	lng: number;
-};
+import { STATUS } from "@/enum/StationStatus";
+import type { StationType } from "@/types/Station";
 
 // Operating network checked 2026-10-27. Yellow/Pink names and coordinates:
 // https://www.ebm.co.th/th/areamap/ (public StationList API).
-export const stations: Station[] = [
+export const stations: Array<StationType> = [
 	{
 		id: 1,
 		line: "ARL",
