@@ -28,17 +28,23 @@ jobs:
         with:
           node-version: 24
           package-manager-cache: false
-      - uses: pnpm/action-setup@v4
-        name: Install pnpm
-        id: pnpm-install
+
+      - name: Install Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          run_install: false
+          bun-version-file: package.json
+
+      # - uses: pnpm/action-setup@v4
+      #   name: Install pnpm
+      #   id: pnpm-install
+      #   with:
+      #     run_install: false
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: bun install --frozen-lockfile
 
       - name: Build project
-        run: pnpm run build
+        run: bun run build
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
