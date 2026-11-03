@@ -7,7 +7,7 @@ import { type LatLngExpression } from "leaflet";
 
 const MAP_CONFIG = {
 	preferCanvas: true,
-	scrollWheelZoom: false,
+	scrollWheelZoom: true,
 	center: [13.745611433340166, 100.53414740687204] as LatLngExpression,
 	zoom: 13,
 	maxZoom: 16,
