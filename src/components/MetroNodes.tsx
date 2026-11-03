@@ -20,14 +20,12 @@ const createStationIcon = (lineName: keyof typeof Colors) => {
 };
 
 const MetroNodes = () => {
-	const ALL_NODES: Array<MetroNodeType> = stations.map(
-		(record: StationType) => ({
-			id: `${record.id}`,
-			line: record.line,
-			label: record.name.en,
-			location: [record.lat, record.lng],
-		}),
-	);
+	const ALL_NODES: MetroNodeType[] = stations.map((record: StationType) => ({
+		id: `${record.id}`,
+		line: record.line,
+		label: record.name.en,
+		location: [record.lat, record.lng],
+	}));
 
 	return (
 		<Fragment>

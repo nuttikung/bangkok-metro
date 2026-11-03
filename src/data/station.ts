@@ -3,7 +3,7 @@ import type { StationType } from "@/types/Station";
 
 // Operating network checked 2026-10-27. Yellow/Pink names and coordinates:
 // https://www.ebm.co.th/th/areamap/ (public StationList API).
-export const stations: Array<StationType> = [
+export const stations: StationType[] = [
 	{
 		id: 1,
 		line: "ARL",

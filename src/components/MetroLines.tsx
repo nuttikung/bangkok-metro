@@ -1,37 +1,40 @@
-import { routes as ROUTES } from "@/data/route";
-import { stations as STATIONS } from "@/data/station";
-import type { MetroLineType } from "@/types/MetroLine";
-import type { StationType } from "@/types/Station";
+import { CHNAGE_PATH_OPTION } from "@/config/ChnagePathOption";
+import { groupRoutes } from "@/utils/GroupRoutes";
 import { Fragment } from "react";
 import { Polyline } from "react-leaflet";
+import { getStartEndPoint } from "@/utils/Helpers";
+import { useMetroLine } from "@/hooks/useMetroLine";
+import { BASE_PATH_OPTION } from "@/config/BasePathOption";
 
-const LINE_CONFIG = {
-	color: "white",
-	weight: 5,
-	// opacity: 0.7,
-};
+// ----------------------------------------------------------------------
+const { changeSegments } = groupRoutes();
+
+const changeLine = changeSegments.map((change) =>
+	getStartEndPoint(change.source, change.target),
+);
+
+// ---------------------------------------
+
+// Active Route -> Per line color
+// Dim Route - Per line coloe
+// Change Route - All
 
 const MetroLines = () => {
-	const stationMap = new Map<string, StationType>(
-		STATIONS.map((station) => [`${station.id}`, station]),
-	);
-
-	const routes: Array<MetroLineType> = ROUTES.map((record) => ({
-		refer: `${record.key}`,
-		source: `${record.id_from}`,
-		target: `${record.id_to}`,
-		route_type: record.route_type,
-	}));
-
-	const polyLine = routes.map((route) => {
-		const start = stationMap.get(route.source)!;
-		const end = stationMap.get(route.target)!;
-		return [start, end];
-	});
+	const { selected } = useMetroLine();
+	const lineGroup = Object.entries(selected);
 
 	return (
 		<Fragment>
-			<Polyline positions={polyLine} pathOptions={LINE_CONFIG} />
+			{/* Change line should be dash style */}
+			<Polyline positions={changeLine} pathOptions={CHNAGE_PATH_OPTION} />
+
+			{lineGroup.map(([id, { color, positions }]) => {
+				const PATH_OPTION = { ...BASE_PATH_OPTION, color };
+
+				return (
+					<Polyline key={id} positions={positions} pathOptions={PATH_OPTION} />
+				);
+			})}
 		</Fragment>
 	);
 };

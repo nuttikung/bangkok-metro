@@ -7,4 +7,9 @@ type MetroLineType = {
 	route_type: RouteType;
 };
 
-export type { MetroLineType };
+type LineGroupType = {
+	color: string;
+	segments: MetroLineType[];
+};
+
+export type { MetroLineType, LineGroupType };
